@@ -1,28 +1,41 @@
 const express = require('express');
-const bodyParser= require('body-parser')
-const MongoClient = require('mongodb').MongoClient
+const bodyParser= require('body-parser');
+const {connectToMongo} = require('./mongodb');
 const app = express();
-var db;
-var url = 'mongodb://localhost:27017/PetStory';
-app.use(bodyParser.urlencoded({ extended: true }))
 
-MongoClient.connect(url,{ useNewUrlParser: true }, (err, database) => {
-    if (err) return console.log(err)
-    db = database.db('PetStory');
-    app.listen(3000, () => {
-        console.log('listening on 3000')
-    })
-})
+let mongodb;
+
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json());
+
+
+app.listen(3000, () => {
+  connectToMongo().then((db) => {
+    mongodb = db;
+    console.log('listening on 3000');
+  });
+});
 
 app.post('/quotes', (req, res) => {
-    db.collection('quotes').save(req.body, (err, result) => {
-      if (err) return console.log(err)
+  mongodb.collection('quotes').save(req.body, (err, result) => {
+    if (err) return console.log(err);
   
-      console.log('saved to database')
-      res.redirect('/')
-    })
-  })
+    console.log('saved to database');
 
-app.get('/', function (req, res) {
-    res.send('Hello World')
+    res.redirect('/');
+  })
+});
+
+app.post('/addUser', (req, res) => {
+
+});
+
+app.post('/addPet', (req, res) => {
+  
+});
+
+
+
+app.get('/friends', function (req, res) {
+    
 });
