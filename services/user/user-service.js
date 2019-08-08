@@ -13,7 +13,9 @@ module.exports = {
 async function login(user) {
     const userResult = await User.findOne({ username: user.username });
     if (userResult) {
-        return userResult;
+        if (user.password == userResult.password) {
+            return userResult;
+        }
     }
 }
 
