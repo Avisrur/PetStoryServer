@@ -6,4 +6,5 @@ module.exports = {
     User: require('../services/user/user-model'),
     Pet: require('../services/pet/pet-model'),
     Park: require('../services/park/park-model'),
+    Post: require('../services/post/post-model'),
 };

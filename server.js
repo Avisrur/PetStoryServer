@@ -14,6 +14,7 @@ app.use(cors());
 app.use('/users', require('./services/user/user-controller'));
 app.use('/pets', require('./services/pet/pet-controller'));
 app.use('/parks', require('./services/park/park-controller'));
+app.use('/posts', require('./services/post/post-controller'));
 
 app.use(errorHandler);
 

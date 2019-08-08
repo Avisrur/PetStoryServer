@@ -3,12 +3,22 @@ const router = express.Router();
 const parkService = require('./park-service');
 
 // routes
+router.post('/', create);
 router.get('/', getAll);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 
 module.exports = router;
+
+function create(req, res, next) {
+    parkService.create(req.body)
+        .then(() => res.json({}))
+        .catch(err => {
+            console.log(err);
+            next(err)
+        });
+}
 
 
 function getAll(req, res, next) {

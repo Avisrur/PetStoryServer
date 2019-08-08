@@ -15,7 +15,12 @@ module.exports = router;
 
 function login(req, res, next) {
     userService.login(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+        .then(user => {
+            if(user){
+                res.json(user)
+             } else { res.status(400).json({ message: 'Username or password is incorrect' })
+            }
+        })
         .catch(err => next(err));
 }
 

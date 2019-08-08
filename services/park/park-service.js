@@ -1,5 +1,5 @@
 const db = require('../../helpers/db');
-const Pet = db.Pet;
+const Park = db.Park;
 
 module.exports = {
     getAll,
@@ -10,41 +10,41 @@ module.exports = {
 };
 
 async function getAll() {
-    return await Pet.find();
+    return await Park.find();
 }
 
 async function getById(id) {
-    return await Pet.findById(id);
+    return await Park.findById(id);
 }
 
-async function create(petParam) {
+async function create(parkParam) {
     // validate
-    if (await Pet.findOne({ name : petParam.name })) {
-        throw 'Name "' + petParam.username + '" is already taken';
+    if (await Park.findOne({ address : parkParam.address })) {
+        throw 'Address "' + parkParam.address + '" is already taken';
     }
 
-    const pet = new Pet(petParam);
+    const park = new Park(parkParam);
 
 
-    // save pet
-    await pet.save();
+    // save park
+    await park.save();
 }
 
-async function update(id, petParam) {
-    const pet = await Pet.findById(id);
+async function update(id, parkParam) {
+    const park = await Park.findById(id);
 
     // validate
-    if (!pet) throw 'Pet not found';
-    if (pet.name !== petParam.name && await Pet.findOne({ name: petParam.name })) {
-        throw 'Name "' + petParam.name + '" is already taken';
+    if (!park) throw 'Park not found';
+    if (park.address !== parkParam.address && await Park.findOne({ address: parkParam.address })) {
+        throw 'Address "' + parkParam.address + '" is already taken';
     }
 
-    // copy petParam properties to pet
-    Object.assign(pet, petParam);
+    // copy parkParam properties to park
+    Object.assign(park, parkParam);
 
-    await pet.save();
+    await park.save();
 }
 
 async function _delete(id) {
-    await Pet.findByIdAndRemove(id);
+    await Park.findByIdAndRemove(id);
 }
