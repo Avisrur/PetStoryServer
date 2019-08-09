@@ -3,6 +3,8 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const errorHandler = require('./helpers/error-handler');
+// const http = require('http').Server(app);
+// const io = require('socket.io')(http);  for trying to make feed real time
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());

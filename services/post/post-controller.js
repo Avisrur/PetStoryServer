@@ -22,7 +22,7 @@ function create(req, res, next) {
 
 function getAll(req, res, next) {
     postService.getAll()
-        .then(posts => res.json(posts))
+        .then(posts => res.json({posts: posts}))
         .catch(err => next(err));
 }
 

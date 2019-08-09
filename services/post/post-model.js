@@ -5,6 +5,8 @@ const postSchema = new Schema({
     id: {type: String},
     userId: {type: String},
     username: {type: String},
+    userImage: {type: String},
+    postTitle: {type: String},
     postImage: {type: String},
     postText: {type: String},
     timestamp: {type: Date}
