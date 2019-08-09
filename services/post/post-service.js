@@ -31,10 +31,6 @@ async function update(id, postParam) {
 
     // validate
     if (!post) throw 'Post not found';
-    if (post.address !== postParam.address && await Post.findOne({ address: postParam.address })) {
-        throw 'Address "' + postParam.address + '" is already taken';
-    }
-
     // copy postParam properties to post
     Object.assign(post, postParam);
 
