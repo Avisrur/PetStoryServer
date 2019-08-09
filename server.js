@@ -1,8 +1,5 @@
 const express = require('express');
 const app = express();
-// let multer = require('multer');
-// let GridFsStorage = require('multer-gridfs-storage');
-// let Grid = require('gridfs-stream');  check if image upload possible
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const errorHandler = require('./helpers/error-handler');
