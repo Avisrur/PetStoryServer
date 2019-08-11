@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema({
     username: { type: String, required: true},
     id: {type: String},
@@ -9,7 +10,9 @@ const userSchema = new Schema({
     age: {type: String},
     email: {type: String},
     password: { type: String, required: true },
-    picture: {type: String}
+    picture: {type: String},
+    pets: {type: [String]},
+    friends: {type: [String]}
 });
 
 userSchema.set('toJSON', { virtuals: true });

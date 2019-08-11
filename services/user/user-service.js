@@ -1,5 +1,7 @@
 const db = require('../../helpers/db');
+const asyncForEach = require('../../helpers/utility');
 const User = db.User;
+const Pet = db.Pet;
 
 module.exports = {
     login,
@@ -14,17 +16,32 @@ async function login(user) {
     const userResult = await User.findOne({ username: user.username });
     if (userResult) {
         if (user.password == userResult.password) {
+
+            const pets = await convertIdToObject(userResult.pets, Pet);
+
+            Object.assign(userResult.pets, pets);
+            //userResult.pets = pets;
             return userResult;
         }
     }
 }
 
 async function getAll() {
-    return await User.find();
+    const users = await User.find();
+    await asyncForEach(users, async () => {
+        const pets = await convertIdToObject(user.pets, Pet);
+        user.pets = pets;
+    });
+
+    return users;
 }
 
 async function getById(id) {
-    return await User.findById(id);
+    const user = await User.findById(id);
+    const pets = await convertIdToObject(user.pets, Pet);
+
+    user.pets = pets;
+    return user;
 }
 
 async function create(userParam) {
@@ -35,6 +52,8 @@ async function create(userParam) {
 
     const user = new User(userParam);
 
+    user.pets = [];
+    user.friends = [];
 
     // save user
     await user.save();
@@ -57,4 +76,22 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function convertIdToObject(fromArray, collection){
+
+    if (fromArray && fromArray.length > 0) {
+        const allObjectsArray = [];
+        await asyncForEach(fromArray, async (id) => {
+            const obj = await collection.findById(id);
+            if (obj) {
+                allObjectsArray.push(obj.toJSON());
+            }
+            
+        });
+    
+        return allObjectsArray;
+    }
+
+    return [];
 }
