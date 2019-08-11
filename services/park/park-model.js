@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const parkSchema = new Schema({
     id: {type: String},
     name: {type: String},
-    address: {type: String}
+    address: {type: String},
+    likes: {type: Number}
 });
 
 parkSchema.set('toJSON', { virtuals: true });

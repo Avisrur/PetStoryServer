@@ -23,7 +23,7 @@ function create(req, res, next) {
 
 function getAll(req, res, next) {
     parkService.getAll()
-        .then(parks => res.json(parks))
+        .then(parks => res.json({parks: parks}))
         .catch(err => next(err));
 }
 
