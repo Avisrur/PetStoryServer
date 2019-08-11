@@ -36,13 +36,13 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     petService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then(() => res.json())
         .catch(err => next(err));
 }
 
 function _delete(req, res, next) {
     petService.delete(req.params.id)
-        .then(() => res.json({}))
+        .then((data) => res.json(data))
         .catch(err => next(err));
 }
 

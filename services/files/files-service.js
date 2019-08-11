@@ -11,13 +11,15 @@ module.exports = {
 function convertToBase64(req, res){
     const form = new IncomingForm();
     let base64Image = "";
+    let fileType;
     form.on('file', (field, file) => {
         base64Image = base64_encode(file.path);
+        fileType = file.type;
         
     });
 
     form.on('end', () => {
-        res.json(base64Image);
+        res.json('data:' + fileType + ';base64,' + base64Image);
     });
 
     form.parse(req);

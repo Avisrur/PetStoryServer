@@ -9,7 +9,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    deletePet
 };
 
 async function login(user) {
@@ -76,6 +77,19 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function deletePet(userId, petId) {
+    const user = await User.findById(userId);
+
+    for (let i = 0 ; i < user.pets.length ; i++) {
+        if (user.pets[i] === petId){
+            user.pets.splice(i, 1);
+            break;
+        }
+    }
+
+    return await user.save()
 }
 
 async function convertIdToObject(fromArray, collection){
