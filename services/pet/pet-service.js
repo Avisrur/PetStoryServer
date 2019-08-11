@@ -1,5 +1,6 @@
 const db = require('../../helpers/db');
 const Pet = db.Pet;
+const User = db.User;
 
 module.exports = {
     getAll,
