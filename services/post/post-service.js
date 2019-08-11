@@ -10,7 +10,7 @@ module.exports = {
 };
 
 async function getAll() {
-    return await Post.find();
+    return await Post.find().sort('-timestamp');
 }
 
 async function getById(id) {
