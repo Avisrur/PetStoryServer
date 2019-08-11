@@ -26,9 +26,14 @@ async function create(petParam) {
 
     const pet = new Pet(petParam);
 
+    const user = await User.findById(petParam.userId)
+    
+    user.pets.push(pet._id);
+
+    user.save();
 
     // save pet
-    await pet.save();
+    return await pet.save();
 }
 
 async function update(id, petParam) {
@@ -47,5 +52,5 @@ async function update(id, petParam) {
 }
 
 async function _delete(id) {
-    await Pet.findByIdAndRemove(id);
+    return await Pet.findByIdAndRemove(id);
 }

@@ -10,6 +10,7 @@ router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
+router.delete('/user/:userId/pet/:petId', _deletePet);
 
 module.exports = router;
 
@@ -59,6 +60,12 @@ function update(req, res, next) {
 
 function _delete(req, res, next) {
     userService.delete(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function _deletePet(req, res, next) {
+    userService.deletePet(req.params.userId, req.params.petId)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
