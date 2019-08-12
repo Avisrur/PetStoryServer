@@ -1,5 +1,6 @@
 const db = require('../../helpers/db');
 const Post = db.Post;
+const Park = db.Park;
 
 module.exports = {
     getAll,
@@ -10,7 +11,9 @@ module.exports = {
 };
 
 async function getAll() {
-    return await Post.find().sort('-timestamp');
+    const posts = await Post.find().sort('-timestamp');
+    const parks = await Park.find().sort('-timestamp');
+    return {posts: posts, parks: parks};
 }
 
 async function getById(id) {
