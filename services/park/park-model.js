@@ -6,7 +6,8 @@ const parkSchema = new Schema({
     name: {type: String},
     address: {type: String},
     likes: {type: Number},
-    timestamp: {type: Date}
+    timestamp: {type: Date},
+    currentPopulation: {type:Number}
 });
 
 parkSchema.set('toJSON', { virtuals: true });
