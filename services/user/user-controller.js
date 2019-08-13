@@ -11,6 +11,7 @@ router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 router.delete('/user/:userId/pet/:petId', _deletePet);
+router.get('/user/:username', getAllMatchedUsers);
 
 module.exports = router;
 
@@ -36,6 +37,11 @@ function register(req, res, next) {
 
 function getAll(req, res, next) {
     userService.getAll()
+        .then(users => res.json(users))
+        .catch(err => next(err));
+}
+function getAllMatchedUsers(req, res, next) {
+    userService.getAllMatchedUsers(req.params.username)
         .then(users => res.json(users))
         .catch(err => next(err));
 }
