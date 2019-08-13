@@ -10,7 +10,8 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    deletePet
+    deletePet,
+    getAllMatchedUsers
 };
 
 async function login(user) {
@@ -29,19 +30,35 @@ async function login(user) {
 
 async function getAll() {
     const users = await User.find();
-    await asyncForEach(users, async () => {
+    let filledUsers = []
+    await asyncForEach(users, async (user, index) => {
         const pets = await convertIdToObject(user.pets, Pet);
-        user.pets = pets;
+        Object.assign(user.pets,pets);
+        
+        //filledUsers.push(user);
     });
 
     return users;
+}
+
+async function getAllMatchedUsers(username) {
+    let users = await getAll();
+    
+    return {users: users.filter(user => {
+        return user.username.toLowerCase().includes(username)
+                || user.firstName.toLowerCase().includes(username)
+                || user.lastName.toLowerCase().includes(username) 
+                || (user.firstName +  ' ' + user.lastName).toLowerCase().includes(username)
+                || (user.lastName +  ' ' + user.firstName).toLowerCase().includes(username);
+    })};
+
 }
 
 async function getById(id) {
     const user = await User.findById(id);
     const pets = await convertIdToObject(user.pets, Pet);
 
-    user.pets = pets;
+    Object.assign(user.pets, pets);
     return user;
 }
 
