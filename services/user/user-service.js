@@ -11,7 +11,8 @@ module.exports = {
     update,
     delete: _delete,
     deletePet,
-    getAllMatchedUsers
+    getAllMatchedUsers,
+    deleteFollow
 };
 
 async function login(user) {
@@ -20,8 +21,10 @@ async function login(user) {
         if (user.password == userResult.password) {
 
             const pets = await convertIdToObject(userResult.pets, Pet);
+            const following = await convertIdToObject(userResult.following, User);
 
             Object.assign(userResult.pets, pets);
+            Object.assign(userResult.following, following);
             //userResult.pets = pets;
             return userResult;
         }
@@ -33,8 +36,10 @@ async function getAll() {
     let filledUsers = []
     await asyncForEach(users, async (user, index) => {
         const pets = await convertIdToObject(user.pets, Pet);
-        Object.assign(user.pets,pets);
-        
+        const following = await convertIdToObject(user.following, User);
+        Object.assign(user.following, following);
+        Object.assign(user.pets, pets);
+
         //filledUsers.push(user);
     });
 
@@ -43,14 +48,16 @@ async function getAll() {
 
 async function getAllMatchedUsers(username) {
     let users = await getAll();
-    
-    return {users: users.filter(user => {
-        return user.username.toLowerCase().includes(username)
+
+    return {
+        users: users.filter(user => {
+            return user.username.toLowerCase().includes(username)
                 || user.firstName.toLowerCase().includes(username)
-                || user.lastName.toLowerCase().includes(username) 
-                || (user.firstName +  ' ' + user.lastName).toLowerCase().includes(username)
-                || (user.lastName +  ' ' + user.firstName).toLowerCase().includes(username);
-    })};
+                || user.lastName.toLowerCase().includes(username)
+                || (user.firstName + ' ' + user.lastName).toLowerCase().includes(username)
+                || (user.lastName + ' ' + user.firstName).toLowerCase().includes(username);
+        })
+    };
 
 }
 
@@ -58,6 +65,8 @@ async function getById(id) {
     const user = await User.findById(id);
     const pets = await convertIdToObject(user.pets, Pet);
 
+    const following = await convertIdToObject(user.following, User);
+    Object.assign(user.following, following);
     Object.assign(user.pets, pets);
     return user;
 }
@@ -71,7 +80,7 @@ async function create(userParam) {
     const user = new User(userParam);
 
     user.pets = [];
-    user.friends = [];
+    user.following = [];
 
     // save user
     await user.save();
@@ -90,17 +99,23 @@ async function update(id, userParam) {
     Object.assign(user, userParam);
 
     await user.save();
+    const pets = await convertIdToObject(user.pets, Pet);
+
+    const following = await convertIdToObject(user.following, User);
+    Object.assign(user.following, following);
+    Object.assign(user.pets, pets);
+    return user;
 }
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
-async function deletePet(userId, petId) {
+async function deleteFollow(userId, userIdToUnfollow) {
     const user = await User.findById(userId);
 
-    for (let i = 0 ; i < user.pets.length ; i++) {
-        if (user.pets[i] === petId){
+    for (let i = 0; i < user.following.length; i++) {
+        if (user.following[i] === userIdToUnfollow) {
             user.pets.splice(i, 1);
             break;
         }
@@ -109,7 +124,20 @@ async function deletePet(userId, petId) {
     return await user.save()
 }
 
-async function convertIdToObject(fromArray, collection){
+async function deletePet(userId, petId) {
+    const user = await User.findById(userId);
+
+    for (let i = 0; i < user.pets.length; i++) {
+        if (user.pets[i] === petId) {
+            user.pets.splice(i, 1);
+            break;
+        }
+    }
+
+    return await user.save()
+}
+
+async function convertIdToObject(fromArray, collection) {
 
     if (fromArray && fromArray.length > 0) {
         const allObjectsArray = [];
@@ -118,9 +146,9 @@ async function convertIdToObject(fromArray, collection){
             if (obj) {
                 allObjectsArray.push(obj.toJSON());
             }
-            
+
         });
-    
+
         return allObjectsArray;
     }
 
