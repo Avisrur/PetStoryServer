@@ -12,7 +12,7 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     picture: {type: String},
     pets: {type: [String]},
-    friends: {type: [String]}
+    following: {type: [String]}
 });
 
 userSchema.set('toJSON', { virtuals: true });

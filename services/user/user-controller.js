@@ -11,6 +11,7 @@ router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 router.delete('/user/:userId/pet/:petId', _deletePet);
+router.delete('/user/:userId/userToUnfollow/:userIdToUnfollow', _deleteFollow);
 router.get('/user/:username', getAllMatchedUsers);
 
 module.exports = router;
@@ -60,12 +61,18 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then((user) => res.json(user))
         .catch(err => next(err));
 }
 
 function _delete(req, res, next) {
     userService.delete(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function _deleteFollow(req, res, next) {
+    userService.deleteFollow(req.params.userId, req.params.userIdToUnfollow)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
